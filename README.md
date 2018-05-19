@@ -351,9 +351,9 @@ require('http').createServer((req, res) => {
 
   [MIT](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/rolling-window.svg
-[npm-url]: https://npmjs.org/package/rolling-window
-[travis-image]: https://img.shields.io/travis/hisco/rolling-window/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/hisco/rolling-window
-[coveralls-image]: https://coveralls.io/repos/github/hisco/rolling-window/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/hisco/rolling-window?branch=master
+[npm-image]: https://img.shields.io/npm/v/rolling-windows.svg
+[npm-url]: https://npmjs.org/package/rolling-windows
+[travis-image]: https://img.shields.io/travis/hisco/rolling-windows/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/hisco/rolling-windows
+[coveralls-image]: https://coveralls.io/repos/github/hisco/rolling-windows/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/hisco/rolling-windows?branch=master
