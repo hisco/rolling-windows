@@ -1,5 +1,5 @@
 # Rolling time window store
-  
+
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
@@ -11,20 +11,21 @@
   * Bining
   * Sliding window
 
+
 ## High perormance
 All rolling windows were built with great concern of memory and CPU consumption.
 We don't use arrays under the hood.
 
-Inside this module you will be able to find:
-    * Super-high test coverage
-    * class _WindowCore_ - A very simple & basic window, it only manages to additions and disposals of buckets. 
-    * class _TimeWindowCore_ - Window that adds and dispose buckets based on a configurable interval.
-    * class _WindowSingleCounter_ - Window with counter in every bucket.
-    * class _WindowSingleStackedCounter_ - Widnow with stacked counter (Based on previous bucket). 
-    * class _TimeBasedWindowCounter_ - Window with counter in every bucket it adds and dispose buckets based on a configurable interval.
-    * class _WindowMultipleCounters_ - Window with multiple counters in every bucket. 
-    * class _TimeBasedWindowMultipleCounters_ - Window with multiple counters in every bucket it adds and dispose buckets based on a configurable interval. 
-    * class _GenericTimeBasedStore_ - Window with generic object in any bucket that you can store any info in the last bucket and query all at once.
+Inside this module you will be able to find
+  * Super-high test coverage
+  * class _WindowCore_ - A very simple & basic window, it only manages to additions and disposals of buckets. 
+  * class _TimeWindowCore_ - Window that adds and dispose buckets based on a configurable interval.
+  * class _WindowSingleCounter_ - Window with counter in every bucket.
+  * class _WindowSingleStackedCounter_ - Widnow with stacked counter (Based on previous bucket). 
+  * class _TimeBasedWindowCounter_ - Window with counter in every bucket it adds and dispose buckets based on a configurable interval.
+  * class _WindowMultipleCounters_ - Window with multiple counters in every bucket. 
+  * class _TimeBasedWindowMultipleCounters_ - Window with multiple counters in every bucket it adds and dispose buckets based on a configurable interval. 
+  * class _GenericTimeBasedStore_ - Window with generic object in any bucket that you can store any info in the last bucket and query all at once.
 
 Speed and quality are the greatest concerns, this module was built with proper data structures and with some V8 micro-optimizations for even better CPU and memory consumption.
 
@@ -280,7 +281,7 @@ In the following example I want to:
 
 ```js
 const REQUEST_LIMIT_PER_HOUR = 1000;
-const {TimeBasedWindowMultipleCounters} = require('rolling-windows');
+const {TimeBasedWindowMultipleCounters} = require('rolling-window');
 const querystring = require('querystring');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
@@ -350,9 +351,9 @@ require('http').createServer((req, res) => {
 
   [MIT](LICENSE)
 
-[npm-image]: https://img.shields.io/npm/v/rolling-windows.svg
-[npm-url]: https://npmjs.org/package/rolling-windows
-[travis-image]: https://img.shields.io/travis/hisco/rolling-windows/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/hisco/rolling-windows
-[coveralls-image]: https://coveralls.io/repos/github/hisco/rolling-windows/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/github/hisco/rolling-windosw?branch=master
+[npm-image]: https://img.shields.io/npm/v/rolling-window.svg
+[npm-url]: https://npmjs.org/package/rolling-window
+[travis-image]: https://img.shields.io/travis/hisco/rolling-window/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/hisco/rolling-window
+[coveralls-image]: https://coveralls.io/repos/github/hisco/rolling-window/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/hisco/rolling-window?branch=master
