@@ -1,7 +1,9 @@
 export declare module RollingTimeWindow{
     export class WindowBucket<T>{
-        constructor(value : T);
-        bucketValue:T;
+        constructor(public bucketValue : T);
+    }
+    export class SingleValue<T>{
+        constructor(public value : T);
     }
     export interface TimeWindowCoreOptions<T>{
         timeWindow : number,
@@ -37,13 +39,13 @@ export declare module RollingTimeWindow{
         asyncIterate(iterationCallback : iterationAsyncCallback<T> , done : (total:number)=>void);
         setPublicOn(instance : any):void;
     }
-    export class TimeWindowCore<T> extends WindowCore<T>{
+    export class TimeWindowCore<T> extends WindowCore<TimePoint>{
         constructor(options : TimeWindowCoreOptions<T>);
         contatiner:WindowCore<T>;
         start():void;
         pause():void;
     }
-    export class WindowSingleCounter extends TimeWindowCore<number>{
+    export class WindowSingleCounter extends TimeWindowCore<SingleValue<number>>{
         constructor(options : TimeWindowCounterOptions);
         contatiner:TimeWindowCore<number>;
         increase():number;
@@ -55,7 +57,7 @@ export declare module RollingTimeWindow{
     export class WindowSingleStackedCounter extends WindowSingleCounter{
 
     }
-    export class TimePointPoint {
+    export class TimePoint {
         at:number;
         value:number;
     }
@@ -65,7 +67,7 @@ export declare module RollingTimeWindow{
     export class MultiValue{
         [key:string]:number|any;
     }
-    export class WindowMultipleCounters extends TimeWindowCore<TimePointPoint <MultiValue>>{
+    export class WindowMultipleCounters extends TimeWindowCore<TimePoint<MultiValue>>{
         toArray():MultiValue[];
         contatiner:TimeWindowCore<MultiValue>;
         increase(key:string):number;
@@ -75,7 +77,7 @@ export declare module RollingTimeWindow{
     }
     
     export class TimeBasedWindowMultipleCounters extends WindowMultipleCounters{
-        toDateArray():WindowBucket<TimePointPoint<MultiValue>>[]
+        toDateArray():WindowBucket<TimePoint<MultiValue>>[]
         increase(key:string):number;
         decrease(key:string):number;
         increaseBy(key:string,by:number):number;

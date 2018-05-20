@@ -14,9 +14,9 @@ function verifyRateLimitAndSetHeaders(clientAccount , res ){
     //If the account already passed the limit we need to block it
     let requestsThisHour = 0;
     //Find requests count of the last hour - the full window
-    rollingTimeCounters.iterate((windowBucket)=>{
-        const bucketValues = windowBucket.bucketValue.value;
-        const counter = bucketValues[clientAccount];
+    rollingTimeCounters.iterateValues((singleValue)=>{
+        const multiValues = singleValue.value;
+        const counter = multiValues[clientAccount];
         if (typeof counter == 'number')
             requestsThisHour+=counter;
     });
@@ -28,8 +28,8 @@ function verifyRateLimitAndSetHeaders(clientAccount , res ){
         rollingTimeCounters.increase(clientAccount);
         //Sending rate limits information to the client
         res.setHeader('X-RateLimit-Reset' , rollingTimeCounters.getTimeToNextTick());
-        res.setHeader('X-RateLimit-Remaining' , REQUEST_LIMIT_PER_HOUR);
-        res.setHeader('X-RateLimit-Limit' , REQUEST_LIMIT_PER_HOUR - requestsThisHour-1 );
+        res.setHeader('X-RateLimit-Remaining' , REQUEST_LIMIT_PER_HOUR - requestsThisHour-1 );
+        res.setHeader('X-RateLimit-Limit' , REQUEST_LIMIT_PER_HOUR);
         return true;
     }
     

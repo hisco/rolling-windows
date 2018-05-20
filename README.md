@@ -11,6 +11,7 @@
   * Bining
   * Sliding window
 
+  Rolling windows module can be used by both browser and Node.js.
 
 ## High perormance
 All rolling windows were built with great concern of memory and CPU consumption.
@@ -31,7 +32,7 @@ Speed and quality are the greatest concerns, this module was built with proper d
 
 ## What is a rolling window?
 
-A rolling window is a technique to store an endless stream of data while perserving the order of processing/disposel of data.
+A rolling window is a technique to process and store a subset of an endless stream of data while perserving the order of processing/disposel of the data.
 
 The window can be considerd as an actual window, while through the window you see at any given time data at a maximum size of the window.
 Similiar to a very long train passing and you can see only a few railroas cars at any given time.
@@ -50,7 +51,7 @@ No worries you can just use a 'Rolling window'!
 ```js
     //Require all `rolling time window` module
     const rollingTimeWindow = require('rolling-time-window');
-    //Now you can use both `rollingTimeWindow.TimeBasedWindowCounter` etc...
+    //Now you can use `rollingTimeWindow.TimeBasedWindowCounter` etc...
 
     //Directly load the desired class
     const {WindowSingleCounter ,GenericTimeBasedStore} = require('rolling-time-window');
@@ -60,11 +61,7 @@ No worries you can just use a 'Rolling window'!
 ### Using TypeScript
 ```ts
     import {rollingTimeWindow} from 'rolling-time-window';
-    //Now you can use both `rollingTimeWindow.DataQueue` and `ZeroQ.TasksQueue`
-
-    //Directly load the desired class
-    const {WindowSingleCounter ,GenericTimeBasedStore} = require('rolling-time-window');
-
+    //Now you can use `rollingTimeWindow.TimeBasedWindowCounter` etc...
 ```
 
 ## Why not just array?
@@ -75,6 +72,13 @@ The most common and simple implementation of rolling window is sometimes handled
 Array is an implementation of a stack data structure and is the best implementation when you need to push/pop something at the end of the stack.
 However, when it is also requeired to remove something at the beging of the stack the array will need to *Move* all elements and re-index the entire array with o(n) complexity (Imagine an array with millions of elements). 
 While with linked list it's only o(1) complexity at any size of array.
+
+Example of a bad practice:
+```js
+var a = [1,2,3,4,5];
+a.shift() // Will cause o(n) operations
+```
+
 
 ### Array would have have wasted more memory
 Under the hood arrays are dynamic data strucure these change per the programtic demand in run time.
@@ -100,6 +104,12 @@ Example of a better practice:
 var a = [20, 100, 100.5, true];
 ```
 
+Example of a bad practice:
+```js
+var a = [1,2,3,4,5];
+a.shift() // Will cause o(n) operations
+```
+
 ## API
 
 All rolling windows handles the basic concept rolling windows some in addition also handels a configurable internal time interval.
@@ -115,8 +125,10 @@ The following will assist you to gasp what the module can do for you before you 
 If you are not famillier with TypeScript you can go a head and jump to the exampels.
 ```ts
     class WindowBucket<T>{
-        constructor(value : T);
-        bucketValue:T;
+        constructor(public bucketValue : T);
+    }
+    class SingleValue<T>{
+        constructor(public value : T);
     }
     interface TimeWindowCoreOptions<T>{
         timeWindow : number,
@@ -152,13 +164,13 @@ If you are not famillier with TypeScript you can go a head and jump to the examp
         asyncIterate(iterationCallback : iterationAsyncCallback<T> , done : (total:number)=>void);
         setPublicOn(instance : any):void;
     }
-    class TimeWindowCore<T> extends WindowCore<T>{
+    class TimeWindowCore<T> extends WindowCore<TimePoint>{
         constructor(options : TimeWindowCoreOptions<T>);
         contatiner:WindowCore<T>;
         start():void;
         pause():void;
     }
-    class WindowSingleCounter extends TimeWindowCore<number>{
+    class WindowSingleCounter extends TimeWindowCore<SingleValue<number>>{
         constructor(options : TimeWindowCounterOptions);
         contatiner:TimeWindowCore<number>;
         increase():number;
@@ -170,7 +182,7 @@ If you are not famillier with TypeScript you can go a head and jump to the examp
     class WindowSingleStackedCounter extends WindowSingleCounter{
 
     }
-    class TimePointPoint {
+    class TimePoint {
         at:number;
         value:number;
     }
@@ -180,7 +192,7 @@ If you are not famillier with TypeScript you can go a head and jump to the examp
     class MultiValue{
         [key:string]:number|any;
     }
-    class WindowMultipleCounters extends TimeWindowCore<TimePointPoint<MultiValue>>{
+    class WindowMultipleCounters extends TimeWindowCore<TimePoint<MultiValue>>{
         toArray():MultiValue[];
         contatiner:TimeWindowCore<MultiValue>;
         increase(key:string):number;
@@ -188,9 +200,8 @@ If you are not famillier with TypeScript you can go a head and jump to the examp
         increaseBy(key:string,by:number):number;
         decreaseBy(key:string,by:number):number;
     }
-    
     class TimeBasedWindowMultipleCounters extends WindowMultipleCounters{
-        toDateArray():WindowBucket<TimePointPoint<MultiValue>>[]
+        toDateArray():WindowBucket<TimePoint<MultiValue>>[]
         increase(key:string):number;
         decrease(key:string):number;
         increaseBy(key:string,by:number):number;
@@ -204,84 +215,114 @@ If you are not famillier with TypeScript you can go a head and jump to the examp
 
 ##Examples
 
+###Simple use of multiple counters
+```js
+const {TimeBasedWindowMultipleCounters} = require('rolling-windows');
+
+const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
+    timeWindow : 1000*60, //I want to have information up to 1 minute
+    bucketsFrequancy : 1000*10,//I want to have bucket every 10 seconds
+});
+//Start the internal
+rollingTimeCounters.start();
+
+//You can count any event
+rollingTimeCounters.increaseBy("eventName" , 50);
+
+//You can iterate over your bucket
+rollingTimeCounters.iterateValues((timePoint)=>{
+    //This is the bucket value in our case it's a TimePoint    
+    console.log(`At ${timePoint.date} the count was ${timePoint.value.eventName} `);
+})
+```
+
+#Simple use of single counter
+```js
+const {WindowSingleCounter} = require('rolling-windows');
+
+const counter = new WindowSingleCounter({
+    timeWindow : 1000*60*60, //I want to have information up tp an hour
+    bucketsFrequancy : 1000*20,//I want to have bucket per 20 seconds
+});
+//increase
+counter.increase();
+
+
+//I can iterate over your bucket and calculate total
+let total = 0;
+counter.iterateValues((singleValue)=>{  
+    total+= singleValue.value;
+});
+console.log(total);
+
+counter.start();
+```
+
 Some cool examples of what you can do with these rolling windows.
 
 ###Count the status code of your http server
 ```js
-const REQUEST_LIMIT_PER_HOUR = 1000;
-const {TimeBasedWindowMultipleCounters} = require('../src/time-based-counters');
-const querystring = require('querystring');
+const {TimeBasedWindowMultipleCounters} = require('rolling-windows');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
-    timeWindow : 1000*60*60, //I want to have information up to 1 hour
-    bucketsFrequancy : 1000*2,//I want to have bucket every 1 minute
+    timeWindow : 1000*20, //I want to have information up to 20 seconds
+    bucketsFrequancy : 1000*2,//I want to have bucket per 2 seconds
 });
-//Start the internal interval
 rollingTimeCounters.start();
 
-function verifyRateLimitAndSetHeaders(clientAccount , res ){
-    let shouldBlock = false;
-    //If the account already passed the limit we need to block it
-    let requestsThisHour = 0;
-    //Find requests count of the last hour - the full window
-    rollingTimeCounters.iterate((windowBucket)=>{
-        const bucketValues = windowBucket.bucketValue.value;
-        const counter = bucketValues[clientAccount];
-        if (typeof counter == 'number')
-            requestsThisHour+=counter;
-    });
-    if (shouldBlock){
-        return false;
-    }
-    else {
-        //Request passed - count it
-        rollingTimeCounters.increase(clientAccount);
-        //Sending rate limits information to the client
-        res.setHeader('X-RateLimit-Remaining' , REQUEST_LIMIT_PER_HOUR);
-        res.setHeader('X-RateLimit-Limit' , REQUEST_LIMIT_PER_HOUR - requestsThisHour-1 );
-        return true;
-    }
-    
-    //Find if this account passed one of the limits
-}
-require('http').createServer((req, res) => {
-    if (/^\/\??/.test(req.url)){
-        req.query = querystring.parse(req.url.replace(/^\/\??/ , ''));
-        const clientAccount = req.query.clientAccount;
-        if (clientAccount){
-            res.setHeader('Content-Type', 'text/json');
-            const canPass = verifyRateLimitAndSetHeaders(clientAccount , res);
-            if (canPass){
-                //Request is with in rate limits
-                res.writeHead(200);
-                res.end(`{"status" : "Passed"}`);
-            }
-            else {
-                //Request blocked
-                res.writeHead(409);
-                res.end(`{"status" : "Blocked"}`);
-            }
+const server = require('http').createServer((req, res) => {
+    if (req.url == '/info'){
+        res.setHeader('Content-Type', 'application/json');
+
+        
+        const results = {
+            aggregated : {
+                '500' : 0,
+                '200' : 0
+            },
+            rawBucketsData : [],
+            dateArray : rollingTimeCounters.toDateArray()
         }
-       else{
-            res.writeHead(401);
-            res.end(`Please send \`clientAccount\` in query string to use this API `)
-       }
+        rollingTimeCounters.iterateValues((multiValue)=>{
+            const values = multiValue.value;
+            results.rawBucketsData.push(values);
+            if (values["200"])
+                results.aggregated["200"]+= values["200"];
+            if (values["500"])
+                results.aggregated["500"]+= values["500"];
+        });
+        res.writeHead(200);
+        res.end(JSON.stringify(results));
+    }
+    else if (req.url == '/'){
+        res.setHeader('Content-Type', 'text/palin');
+        let isError = Math.floor(Math.random()*2) === 1;
+        if (isError){
+            rollingTimeCounters.increase(500);
+            res.writeHead(500);
+            res.end('I\'m going to report that you just had an error');
+        }
+        else{
+            rollingTimeCounters.increase(200);
+            res.writeHead(200);
+            res.end('ok');
+        }
     }
     else{
         res.writeHead(404);
-        res.end(`Please use only the root "/" `)
+        res.end(`Please use only the "/" or "/info" pages`)
     }
   }).listen(3030);
 ```
 ###Rate limit your client http requests per client account
 
 In the following example I want to:
-    * Limit account to 1K requests an hour.
-    * Notify the client on the quata left at any given request.
+   * Limit account to 1K requests an hour.
+   * Notify the client on the quata left at any given request.
 
 ```js
 const REQUEST_LIMIT_PER_HOUR = 1000;
-const {TimeBasedWindowMultipleCounters} = require('rolling-window');
+const {TimeBasedWindowMultipleCounters} = require('rolling-windows');
 const querystring = require('querystring');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
@@ -296,9 +337,9 @@ function verifyRateLimitAndSetHeaders(clientAccount , res ){
     //If the account already passed the limit we need to block it
     let requestsThisHour = 0;
     //Find requests count of the last hour - the full window
-    rollingTimeCounters.iterate((windowBucket)=>{
-        const bucketValues = windowBucket.bucketValue.value;
-        const counter = bucketValues[clientAccount];
+    rollingTimeCounters.iterateValues((singleValue)=>{
+        const multiValues = singleValue.value;
+        const counter = multiValues[clientAccount];
         if (typeof counter == 'number')
             requestsThisHour+=counter;
     });
@@ -310,8 +351,8 @@ function verifyRateLimitAndSetHeaders(clientAccount , res ){
         rollingTimeCounters.increase(clientAccount);
         //Sending rate limits information to the client
         res.setHeader('X-RateLimit-Reset' , rollingTimeCounters.getTimeToNextTick());
-        res.setHeader('X-RateLimit-Remaining' , REQUEST_LIMIT_PER_HOUR);
-        res.setHeader('X-RateLimit-Limit' , REQUEST_LIMIT_PER_HOUR - requestsThisHour-1 );
+        res.setHeader('X-RateLimit-Remaining' , REQUEST_LIMIT_PER_HOUR - requestsThisHour-1 );
+        res.setHeader('X-RateLimit-Limit' , REQUEST_LIMIT_PER_HOUR);
         return true;
     }
     

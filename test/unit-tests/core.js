@@ -1,9 +1,26 @@
-const { WindowBucket , WindowCore , TimeWindowCore , TimePointPoint  , MultiValue } = require('../../src/core');
+const { WindowBucket , WindowCore , TimeWindowCore , TimePoint  , MultiValue , SingleValue } = require('../../src/core');
 
 const chai = require('chai');
 const expect = chai.expect;
 chai.use(require('chai-spies'));
 
+describe('SingleValue' , ()=>{
+    let singleValue;
+    beforeEach(()=>{
+        singleValue = new SingleValue(2);
+    });
+    describe('#contructor', ()=> {
+        it('Should assign first argument to the value property' , ()=>{
+            expect(singleValue.value).to.equal(2); 
+        })
+    });
+    describe('#next', ()=> {
+        it('Should behave like a regular property' , ()=>{
+            singleValue.next = "something";  
+            expect(singleValue.next).to.equal("something"); 
+        })
+    });
+});
 describe('WindowBucket' , ()=>{
     let windowBucket;
     beforeEach(()=>{
@@ -293,6 +310,23 @@ describe('WindowCore' , ()=>{
             windowCore = new DummyWindowCore(windowOptions);
             expect(windowCore.iterate).to.equal(windowCore._iterate.bind(windowCore));
         });
+        it('Should set iterateValues' , ()=>{
+            const spy = chai.spy(function (){});
+            const spyDummy = chai.spy(function (){});
+            class DummyWindowCore extends WindowCore{
+                constructor(){
+                    super(...arguments);
+                }
+                _createBuckets(){
+                    return spyDummy(...arguments);
+                }
+                get _iterateValues(){
+                    return {bind:()=>spy};
+                }
+            }
+            windowCore = new DummyWindowCore(windowOptions);
+            expect(windowCore.iterateValues).to.equal(windowCore._iterateValues.bind(windowCore));
+        });
         it('Should set addAndTick' , ()=>{
             const spy = chai.spy(function (){});
             const spyDummy = chai.spy(function (){});
@@ -326,6 +360,23 @@ describe('WindowCore' , ()=>{
             }
             windowCore = new DummyWindowCore(windowOptions);
             expect(windowCore.asyncIterate).to.equal(windowCore._asyncIterate.bind(windowCore));
+        });
+        it('Should set asyncIterateValues' , ()=>{
+            const spy = chai.spy(function (){});
+            const spyDummy = chai.spy(function (){});
+            class DummyWindowCore extends WindowCore{
+                constructor(){
+                    super(...arguments);
+                }
+                _createBuckets(){
+                    return spyDummy(...arguments);
+                }
+                get _asyncIterateValues(){
+                    return {bind:()=>spy};
+                }
+            }
+            windowCore = new DummyWindowCore(windowOptions);
+            expect(windowCore.asyncIterateValues).to.equal(windowCore._asyncIterateValues.bind(windowCore));
         });
     });
     describe('#createWindow' , ()=>{
@@ -608,6 +659,36 @@ describe('WindowCore' , ()=>{
                 array.push(windowBucket)
             });
 
+            expect(array[0] instanceof WindowBucket).to.equal(true);
+            expect(array[1] instanceof WindowBucket).to.equal(true);
+            expect(array.length).to.equal(2);
+        })
+    });
+    describe('#_iterateValues' , ()=>{
+        let windowCore;
+        beforeEach(()=>{
+            windowCore = new WindowCore({
+                bucketsCount : 2,
+                defaultValueFactory : ()=>1,
+                onRemoved : chai.spy(function (){
+                }),
+                preFillWindow : true
+            });
+        });
+        it('Should call iterate' , ()=>{
+            windowCore.iterate = chai.spy(()=>3);
+            windowCore._iterateValues((windowBucket)=>{
+            });
+            expect(windowCore.iterate).to.have.been.called();
+        })
+        it('Should collect all elements' , ()=>{
+            const array = [];
+            windowCore._iterateValues((windowBucket)=>{
+                array.push(windowBucket)
+            });
+
+            expect(array[0]).to.equal(1);
+            expect(array[1]).to.equal(1);
             expect(array.length).to.equal(2);
         })
     });
@@ -629,12 +710,56 @@ describe('WindowCore' , ()=>{
                 next()
             });
 
+            expect(array[0] instanceof WindowBucket).to.equal(true);
+            expect(array[1]instanceof WindowBucket).to.equal(true);
             expect(array.length).to.equal(2);
         });
         it('Should call userDone with the size of the list when finished' , ()=>{
             const array = [];
             const userDone = chai.spy(function (){});
             windowCore._asyncIterate((windowBucket , i , next)=>{
+                array.push(windowBucket);
+                next()
+            } , userDone);
+
+            expect(userDone).to.have.been.called.with(2);
+        });
+    });
+    describe('#_asyncIterateValues' , ()=>{
+        let windowCore;
+        beforeEach(()=>{
+            windowCore = new WindowCore({
+                bucketsCount : 2,
+                defaultValueFactory : ()=>1,
+                onRemoved : chai.spy(function (){
+                }),
+                preFillWindow : true
+            });
+        });
+        it('Should call asyncIterate' , ()=>{
+            const array = [];
+            windowCore.asyncIterate = chai.spy(()=>8);
+            windowCore._asyncIterateValues((windowBucket , i , next)=>{
+                array.push(windowBucket);
+                next()
+            });
+            expect(windowCore.asyncIterate).to.have.been.called();
+        });
+        it('Should touch all elements' , ()=>{
+            const array = [];
+            windowCore._asyncIterateValues((windowBucket , i , next)=>{
+                array.push(windowBucket);
+                next()
+            });
+
+            expect(array[0]).to.equal(1);
+            expect(array[1]).to.equal(1);
+            expect(array.length).to.equal(2);
+        });
+        it('Should call userDone with the size of the list when finished' , ()=>{
+            const array = [];
+            const userDone = chai.spy(function (){});
+            windowCore._asyncIterateValues((windowBucket , i , next)=>{
                 array.push(windowBucket);
                 next()
             } , userDone);
@@ -1018,11 +1143,11 @@ describe('TimeWindowCore' , ()=>{
     });
 });
 
-describe('TimePointPoint ' , ()=>{
+describe('TimePoint ' , ()=>{
     describe('#consturctor' , ()=>{
         let timePointBucket ;
         beforeEach(()=>{
-            timePointBucket  = new TimePointPoint (1,2);
+            timePointBucket = new TimePoint(1,2);
         })
         it('Should set `date` ' , ()=>{
             expect(timePointBucket.date).to.equal(1);

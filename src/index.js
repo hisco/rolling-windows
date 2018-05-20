@@ -1,4 +1,4 @@
-const { WindowBucket , WindowCore , TimeWindowCore , TimePointPoint  , MultiValue} = require('./core');
+const { WindowBucket , WindowCore , TimeWindowCore , TimePoint  , SingleValue , MultiValue} = require('./core');
 const { WindowSingleCounter} = require('./single-counter');
 const { WindowSingleStackedCounter } = require('./single-stacked-counter');
 const { TimeBasedWindowCounter } = require('./time-based-single-counter');
@@ -7,9 +7,10 @@ const { TimeBasedWindowMultipleCounters } = require('./time-based-counters');
 const { GenericTimeBasedStore } = require('./time-based-generic');
 
 module.exports = {
+    SingleValue,
     WindowBucket,
     WindowCore,
-    TimePointPoint ,
+    TimePoint ,
     MultiValue, 
     TimeWindowCore, 
     WindowSingleCounter,

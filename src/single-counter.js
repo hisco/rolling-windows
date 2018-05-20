@@ -1,9 +1,9 @@
 const {resultFn} = require('./utils');
-const {WindowBucket , TimeWindowCore} = require('./core');
+const {SingleValue , TimeWindowCore} = require('./core');
 
 class WindowSingleCounter{
-    get WindowBucket(){
-        return WindowBucket
+    get SingleValue(){
+        return SingleValue
     }
     get TimeWindowCore(){
         return TimeWindowCore
@@ -15,7 +15,7 @@ class WindowSingleCounter{
         if (!options.defaultValueFactory) {
             const defaultNumber = options.defaultNumber;
             options.defaultValueFactory = function defaultValueCB(){
-                return new (this.WindowBucket)(resultFn(defaultNumber));
+                return new (this.SingleValue)(resultFn(defaultNumber));
             }.bind(this)
         }  
         this.defaultValueFactory = options.defaultValueFactory;
@@ -40,7 +40,7 @@ class WindowSingleCounter{
     toArray(){
         const array = [];
         this.iterate(function iteration(bucket ){
-            array.push(bucket .bucketValue.value);
+            array.push(bucket.bucketValue.value);
         });
         return array;
     }

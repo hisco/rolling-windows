@@ -1,6 +1,6 @@
 const {WindowMultipleCounters} = require('./counters');
 const {resultFn} = require('./utils');
-const {MultiValue , TimePointPoint  , TimeWindowCore} = require('./core');
+const {MultiValue , TimePoint  , TimeWindowCore} = require('./core');
 
 class TimeBasedWindowMultipleCounters extends WindowMultipleCounters{
     get TimeWindowCore(){
@@ -13,7 +13,7 @@ class TimeBasedWindowMultipleCounters extends WindowMultipleCounters{
             options.defaultNumber = 0;
         if (!options.defaultValueFactory)  {
             options.defaultValueFactory = function defaultValueFactory(){
-                return new TimePointPoint (Date.now() ,new MultiValue())
+                return new TimePoint(Date.now() ,new MultiValue())
             }
         } 
         super(options);
@@ -21,7 +21,7 @@ class TimeBasedWindowMultipleCounters extends WindowMultipleCounters{
     toDateArray(){
         const array = [];
         this.iterate(function iteration(bucket ){
-            array.push(bucket .bucketValue);
+            array.push(bucket.bucketValue);
         });
         return array;
     }

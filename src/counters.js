@@ -50,7 +50,7 @@ class WindowMultipleCounters{
     toArray(){
         const array = [];
         this.iterate(function iteration(bucket ){
-            array.push(bucket .bucketValue.value);
+            array.push(bucket.bucketValue.value);
         });
         return array;
     }

@@ -10,7 +10,6 @@ const server = require('http').createServer((req, res) => {
     if (req.url == '/info'){
         res.setHeader('Content-Type', 'application/json');
 
-        
         const results = {
             aggregated : {
                 '500' : 0,
@@ -19,13 +18,13 @@ const server = require('http').createServer((req, res) => {
             rawBucketsData : [],
             dateArray : rollingTimeCounters.toDateArray()
         }
-        rollingTimeCounters.iterate((windowBucket)=>{
-            const bucketValues = windowBucket.bucketValue.value;
-            results.rawBucketsData.push(bucketValues);
-            if (bucketValues["200"])
-                results.aggregated["200"]+= bucketValues["200"];
-            if (bucketValues["500"])
-                results.aggregated["500"]+= bucketValues["500"];
+        rollingTimeCounters.iterateValues((multiValue)=>{
+            const values = multiValue.value;
+            results.rawBucketsData.push(values);
+            if (values["200"])
+                results.aggregated["200"]+= values["200"];
+            if (values["500"])
+                results.aggregated["500"]+= values["500"];
         });
         res.writeHead(200);
         res.end(JSON.stringify(results));

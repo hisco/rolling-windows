@@ -16,10 +16,12 @@
     "istanbul": "0.4.5"
   },
   "keywords": [
+    "rolling window",
     "rolling",
-    "window",
-    "rolling",
-    "ring",
+    "sliding window",
+    "rolling ring",
+    "ring buffer",
+    "circular buffer",
     "endless",
     "prediction"
   ],

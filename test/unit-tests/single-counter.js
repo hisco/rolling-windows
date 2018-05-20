@@ -10,7 +10,7 @@ describe('WindowSingleCounter' , ()=>{
     let constructorSpy;
     let setPublicOnSpy;
     let DummyWindowSingleCounter;
-    let BucketSpy;
+    let SingleValueSpy;
     let TimeWindowCoreSpy;
     let lastWindowSpy;
     let lastWidnowValueSetterSpy;
@@ -21,7 +21,7 @@ describe('WindowSingleCounter' , ()=>{
         setPublicOnSpy = chai.spy(()=>5);
         createContainerSpy = chai.spy(()=>18);
         TimeWindowCoreSpy = chai.spy(()=>4);
-        BucketSpy = chai.spy(()=>19);
+        SingleValueSpy = chai.spy(()=>19);
         const lastWindow = {
             bucketValue :{
                 get value(){
@@ -45,13 +45,13 @@ describe('WindowSingleCounter' , ()=>{
                 constructorSpy(...arguments);
                 super(...arguments);
             }
-            get WindowBucket(){
-                class BucketSpyClass{
+            get SingleValue(){
+                class SingleValueSpyClass{
                     constructor(){
-                        BucketSpy(...arguments)
+                        SingleValueSpy(...arguments)
                     }
                 }
-                return BucketSpyClass;
+                return SingleValueSpyClass;
             }
             get _createContainer(){
                 return createContainerSpy;
@@ -94,7 +94,7 @@ describe('WindowSingleCounter' , ()=>{
 
             const defaultValueFactoryResult = windowSingleConterOptions.defaultValueFactory();
 
-            expect(BucketSpy).to.have.been.called.with(5);
+            expect(SingleValueSpy).to.have.been.called.with(5);
         });
         
         it('Should not set `defaultValueFactory` if it\'s truthy',()=>{

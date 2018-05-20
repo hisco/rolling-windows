@@ -4,11 +4,16 @@ class WindowBucket{
         this.bucketValue = value;
     }
 }  
+class SingleValue{
+    constructor(value){
+        this.value = value;
+    }
+}  
 
 class MultiValue{
 
 }
-class TimePointPoint {
+class TimePoint {
     constructor(at , value){
         this.date = at;
         this.value = value;
@@ -53,7 +58,9 @@ class WindowCore{
         this.getLastBucket = this._getLastBucket.bind(this);
         this.addAndTick = this._addAndTick.bind(this);
         this.iterate = this._iterate.bind(this);
+        this.iterateValues = this._iterateValues.bind(this);
         this.asyncIterate = this._asyncIterate.bind(this);
+        this.asyncIterateValues = this._asyncIterateValues.bind(this);
     }
     _createBuckets(bucketsCount ){
         let first = new WindowBucket(this.defaultValueFactory());
@@ -68,8 +75,10 @@ class WindowCore{
         instance.addAndTick = this.addAndTick;
         instance.tick = this.tick;
         instance.iterate = this.iterate;
+        instance.iterateValues = this.iterateValues;
         instance.getLastBucket = this.getLastBucket;
         instance.asyncIterate = this.asyncIterate;
+        instance.asyncIterateValues = this.asyncIterateValues;
     }
     _addChildAtTheEnd(){
         this.last = this.last.next = new WindowBucket(this.defaultValueFactory());
@@ -111,6 +120,11 @@ class WindowCore{
             cb(current, i++);
         }
     }
+    _iterateValues(cb){
+       this.iterate(function iterateValues(bucket , i){
+            cb(bucket.bucketValue , i);
+       })
+    }
     _asyncIterate(cb , userDone){
         var i = 0;
         var current = this;
@@ -125,6 +139,11 @@ class WindowCore{
             }
         }
         iteration();
+    }
+    _asyncIterateValues(cb , userDone){
+        this.asyncIterate(function asyncIterate(bucket , i , next){
+            cb(bucket.bucketValue , i , next);
+        } , userDone)
     }
     _getLastBucket(){
         return this.last;
@@ -201,9 +220,10 @@ class TimeWindowCore{
     }
 }
 module.exports = {
+    SingleValue,
     WindowBucket,
     MultiValue,
     WindowCore,
-    TimePointPoint ,
+    TimePoint ,
     TimeWindowCore
 }

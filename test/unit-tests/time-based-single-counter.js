@@ -49,7 +49,7 @@ describe('TimeBasedWindowCounter' , ()=>{
 
             expect(options.defaultValueFactory).to.equal(8);
         });
-        it('Should set `defaultValueFactory` to return `TimePointPoint ` with `defaultNumber`' , ()=>{
+        it('Should set `defaultValueFactory` to return `TimePoint ` with `defaultNumber`' , ()=>{
             const options = {
                 defaultNumber : ()=>8
             };
