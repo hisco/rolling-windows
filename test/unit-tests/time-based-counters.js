@@ -75,6 +75,17 @@ describe('TimeBasedWindowMultipleCounters' , ()=>{
 
             expect( timeBasedWindowMultipleCounters.iterate).to.have.been.called()
         });
+        it('Should push bucketValue' , ()=>{
+            timeBasedWindowMultipleCounters.iterate = (cb)=>{
+                cb({
+                    bucketValue : 88
+                })
+            };
+            const result = timeBasedWindowMultipleCounters.toDateArray();
+
+            expect( result[0] ).to.equal(88)
+        });
+  
         it('Should collect iteration elements' , ()=>{
 
             timeBasedWindowMultipleCounters.iterate = function iterate(cb){

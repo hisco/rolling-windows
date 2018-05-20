@@ -495,7 +495,42 @@ describe('WindowCore' , ()=>{
 
             expect(windowCore.last.bucketValue).to.equal(1)
         });
-    })
+    });
+    describe('#_addAndTick' , ()=>{
+        let windowCore;
+        beforeEach(()=>{
+            windowCore = new WindowCore({
+                bucketsCount : 2,
+                defaultValueFactory : chai.spy(function (){
+                    return 1;
+                }),
+                onRemoved : ()=>{},
+                preFillWindow : false
+            });
+        });
+        it('Should call _addChildAtTheEnd' , ()=>{
+            const lasChild = windowCore.last;
+
+            windowCore._addChildAtTheEnd = chai.spy(()=>9);
+            windowCore._addAndTick();
+
+            expect( windowCore._addChildAtTheEnd).to.have.been.called();
+        });
+        it('Should set last window value to value' , ()=>{
+            const lasChild = windowCore.last;
+
+            windowCore._addChildAtTheEnd = chai.spy(()=>9);
+            const dummyLast = windowCore.last = {};
+            windowCore._addAndTick(999);
+
+            expect(windowCore.last.value).to.equal(dummyLast.value);
+        });
+        it('Should pass the return value of defaultValueFactory to WindowBucket' , ()=>{
+            windowCore._addChildAtTheEnd();
+
+            expect(windowCore.last.bucketValue).to.equal(1)
+        });
+    });
     describe('#_tickWithOnRemoved' , ()=>{
         let windowCore;
         beforeEach(()=>{
@@ -828,6 +863,22 @@ describe('TimeWindowCore' , ()=>{
             expect(timeWindowCore.bucketsFrequancy).to.equal(timeWindowOptions.bucketsFrequancy)
         })
     });
+    describe('#_getTimeToNextTick' , ()=>{
+        let oldNow = Date.now;
+        beforeEach(()=>{
+            Date.now = ()=>9;
+        });
+        afterEach(()=>{
+            Date.now = oldNow;
+        });
+        it('Should calculate time to next tick' , ()=>{
+            const result = TimeWindowCore.prototype._getTimeToNextTick.call({
+                lastTick : 10,
+                bucketsFrequancy : 10
+            });
+            expect(result).to.be.equal(11);
+        });
+    });
     describe('#_onIntervalTick' , ()=>{
         let timeWindowCore;
         let timeWindowOptions;
@@ -857,6 +908,20 @@ describe('TimeWindowCore' , ()=>{
             expect(timeWindowCore.tick).to.have.been.called();
         });
     })
+    describe('get _setInterval' , ()=>{
+        it('Should return global setInterval' , ()=>{
+            const result = TimeWindowCore.prototype._setInterval;
+
+            expect(result).to.equal(setInterval);
+        })
+    });
+    describe('get _clearInterval' , ()=>{
+        it('Should return global clearInterval' , ()=>{
+            const result = TimeWindowCore.prototype._clearInterval;
+
+            expect(result).to.equal(clearInterval);
+        })
+    });
     describe('#_startInterval' , ()=>{
         let timeWindowCore;
         let timeWindowOptions;

@@ -1,4 +1,5 @@
 const { WindowSingleCounter } = require('../../src/single-counter');
+const { TimeWindowCore , SingleValue } = require('../../src/core');
 
 const chai = require('chai');
 const expect = chai.expect;
@@ -73,7 +74,13 @@ describe('WindowSingleCounter' , ()=>{
             }
         }
         DummyWindowSingleCounter = DummyWindowSingleCounterO;
-    })
+    });
+    describe('get SingleValue' , ()=>{
+        expect(WindowSingleCounter.prototype.SingleValue).to.equal(SingleValue);
+    });
+    describe('get SingleValue' , ()=>{
+        expect(WindowSingleCounter.prototype.TimeWindowCore).to.equal(TimeWindowCore);
+    });
     describe('#constructor',()=>{
         it('Should set `defaultNumber` to 0 if `defaultNumber` is falsy',()=>{
             windowSingleConterOptions.defaultNumber = false;
