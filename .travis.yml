@@ -10,4 +10,4 @@ install:
   - npm install
 script:
   - "npm run test"
-after_script: "npm install coveralls@3.0.1 && npm install test-ci && cat ./coverage/lcov.info | coveralls"
+after_script: "npm install coveralls@3.0.1 && npm run test-ci && cat ./coverage/lcov.info | coveralls"

@@ -1,6 +1,6 @@
 {
   "name": "rolling-windows",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Full featured fast rolling windows and time based rolling windows",
   "main": "src/index.js",
   "types": "src/index.d.ts",
