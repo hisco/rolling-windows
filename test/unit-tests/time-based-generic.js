@@ -64,4 +64,23 @@ describe('GenericTimeBasedStore' , ()=>{
             expect(lastWindowData.key).to.equal('value');
         });
     })
+    describe('#getFromLast' , ()=>{
+        it('Should call #_getLastBucketValueAndCreateKey' , ()=>{
+            const genericTimeBasedStore = new GenericTimeBasedStore();
+            genericTimeBasedStore._getLastBucketValueAndCreateKey = _getLastBucketValueAndCreateKey;
+            
+            genericTimeBasedStore.getFromLast('key');
+
+            expect(getLastBucketSpy).to.have.been.called.with('key');
+        });
+        it('Should get value of key' , ()=>{
+            const genericTimeBasedStore = new GenericTimeBasedStore();
+            genericTimeBasedStore._getLastBucketValueAndCreateKey = _getLastBucketValueAndCreateKey;
+            
+            lastWindowData['key']='value';
+            genericTimeBasedStore.getFromLast('key');
+
+            expect(lastWindowData.key).to.equal('value');
+        });
+    })
 });

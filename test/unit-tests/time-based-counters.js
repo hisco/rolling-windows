@@ -1,4 +1,5 @@
 const { TimeBasedWindowMultipleCounters } = require('../../src/time-based-counters');
+const { TimeWindowCore } = require('../../src/core');
 
 const chai = require('chai');
 const expect = chai.expect;
@@ -29,6 +30,13 @@ describe('TimeBasedWindowMultipleCounters' , ()=>{
     afterEach(()=>{
         Object.setPrototypeOf(TimeBasedWindowMultipleCounters , OriginalTimeBasedWindowMultipleCountersProto);
     });
+    describe('get TimeWindowCore', ()=>{
+        it('Should return TimeWindowCore' , ()=>{
+            const result =  TimeBasedWindowMultipleCounters.prototype.TimeWindowCore;
+
+            expect(result).to.equal(TimeWindowCore);
+        })
+    });
     describe('#constructor' , ()=>{
         it('Should have defaults' , ()=>{
             new TimeBasedWindowMultipleCounters();
@@ -39,6 +47,14 @@ describe('TimeBasedWindowMultipleCounters' , ()=>{
             new TimeBasedWindowMultipleCounters(options);
 
             expect(options.defaultNumber).to.equal(0);
+        });
+        it('Should not set `defaultNumber` to 0 if it\'s truthy' , ()=>{
+            const options = {
+                defaultNumber : 3
+            };
+            new TimeBasedWindowMultipleCounters(options);
+
+            expect(options.defaultNumber).not.to.equal(0);
         });
         it('Should set `defaultValueFactory` if it\'s falsy' , ()=>{
             const options = {};
@@ -55,7 +71,7 @@ describe('TimeBasedWindowMultipleCounters' , ()=>{
         })
         it('Should call iterate' , ()=>{
             timeBasedWindowMultipleCounters.iterate = chai.spy();
-            timeBasedWindowMultipleCounters.toArray();
+            timeBasedWindowMultipleCounters.toDateArray();
 
             expect( timeBasedWindowMultipleCounters.iterate).to.have.been.called()
         });
@@ -207,6 +223,14 @@ describe('TimeBasedWindowMultipleCounters' , ()=>{
             timeWindowMultipleCounters.getLastBucket = getLastBucketSpy;
         })
 
+        describe('#increase',()=>{
+            it('Should decrease lastWindow.widnowValue.value by 1' , ()=>{
+                timeWindowMultipleCounters.increase('t');
+    
+                expect(getLastBucketSpy).to.have.been.called();
+                expect(lastWidnowValueSetterSpy).to.have.been.called.with(11);
+            })
+        });
         describe('#decrease',()=>{
             it('Should decrease lastWindow.widnowValue.value by 1' , ()=>{
                 timeWindowMultipleCounters.decrease('t');

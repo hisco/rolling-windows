@@ -1,5 +1,5 @@
 const { WindowMultipleCounters } = require('../../src/counters');
-
+const { TimeWindowCore , MultiValue , WindowBucket} = require('../../src/core');
 const chai = require('chai');
 const expect = chai.expect;
 chai.use(require('chai-spies'));
@@ -34,6 +34,27 @@ describe('WindowMultipleCounters' , ()=>{
         }
         DummyWindowMultipleCounters = DummyWindowMultipleCountersO;
     })
+    describe('get TimeWindowCore', ()=>{
+        it('Should return TimeWindowCore' , ()=>{
+            const result =  WindowMultipleCounters.prototype.TimeWindowCore;
+
+            expect(result).to.equal(TimeWindowCore);
+        })
+    });
+    describe('get WindowBucket', ()=>{
+        it('Should return TimeWindowCore' , ()=>{
+            const result =  WindowMultipleCounters.prototype.WindowBucket;
+
+            expect(result).to.equal(WindowBucket);
+        })
+    });
+    describe('get MultiValue', ()=>{
+        it('Should return TimeWindowCore' , ()=>{
+            const result =  WindowMultipleCounters.prototype.MultiValue;
+
+            expect(result).to.equal(MultiValue);
+        })
+    });
     describe('#constructor' , ()=>{
         
         it('Should set `defaultNumber` to 0 if not defined' , ()=>{
@@ -41,6 +62,14 @@ describe('WindowMultipleCounters' , ()=>{
         
             const windowMultipleCounters = new DummyWindowMultipleCounters(options);
             expect(windowMultipleCounters._defaultNumber).to.equal(0);
+        });
+        it('Shouldn\'t set `defaultNumber` to 0 if not defined' , ()=>{
+            const options = {
+                defaultNumber : 3
+            };
+        
+            const windowMultipleCounters = new DummyWindowMultipleCounters(options);
+            expect(windowMultipleCounters._defaultNumber).not.equal(0);
         });
         it('Shouldn\'t set `defaultValueFactoy` if it\'s truthy ' , ()=>{
             const options = {
@@ -160,6 +189,14 @@ describe('WindowMultipleCounters' , ()=>{
             windowMultipleCounters.getLastBucket = getLastBucketSpy;
         })
 
+        describe('#increase',()=>{
+            it('Should increase lastWindow.widnowValue.value by 1' , ()=>{
+                windowMultipleCounters.increase('t');
+    
+                expect(getLastBucketSpy).to.have.been.called();
+                expect(lastWidnowValueSetterSpy).to.have.been.called.with(11);
+            })
+        });
         describe('#decrease',()=>{
             it('Should decrease lastWindow.widnowValue.value by 1' , ()=>{
                 windowMultipleCounters.decrease('t');
