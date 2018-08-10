@@ -9,7 +9,7 @@ describe('SingleValue' , ()=>{
     beforeEach(()=>{
         singleValue = new SingleValue(2);
     });
-    describe('#contructor', ()=> {
+    describe('#constructor', ()=> {
         it('Should assign first argument to the value property' , ()=>{
             expect(singleValue.value).to.equal(2); 
         })
@@ -26,7 +26,7 @@ describe('WindowBucket' , ()=>{
     beforeEach(()=>{
         windowBucket = new WindowBucket(2);
     });
-    describe('#contructor', ()=> {
+    describe('#constructor', ()=> {
         it('Should assign first argument to the value property' , ()=>{
             expect(windowBucket.bucketValue).to.equal(2); 
         })
@@ -39,7 +39,7 @@ describe('WindowBucket' , ()=>{
     });
 });
 describe('WindowCore' , ()=>{
-    describe('#contructor', ()=> {
+    describe('#constructor', ()=> {
         let windowCore;
         let windowOptions;
         beforeEach(()=>{

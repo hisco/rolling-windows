@@ -1,15 +1,17 @@
-export declare module RollingTimeWindow{
+declare module RollingTimeWindow{
     export class WindowBucket<T>{
-        constructor(public bucketValue : T);
+        public bucketValue : T;
+        constructor(bucketValue : T);
     }
     export class SingleValue<T>{
-        constructor(public value : T);
+        public value : T;
+        constructor(value : T);
     }
     export interface TimeWindowCoreOptions<T>{
         timeWindow : number,
         bucketsFrequancy : number,
         defaultValueFactory : defaultValueFactory<T>,
-        onRemoved : onRemoved<BucketValue<T>>;
+        onRemoved : onRemoved<WindowBucket<T>>;
     }
     export interface TimeWindowCounterOptions extends TimeWindowCoreOptions<number>{
         defaultNumber : number
@@ -21,13 +23,13 @@ export declare module RollingTimeWindow{
     export interface WindowCoreOptions<T>{
         bucketsCount : number;
         defaultValueFactory : defaultValueFactory<T>;
-        onRemoved :onRemoved<BucketValue<T>>;
+        onRemoved :onRemoved<WindowBucket<T>>;
         preFillWindow : boolean;
     }
     export class WindowCore<T>{
         bucketsCount:number;
         defaultValueFactory:defaultValueFactory<T>;
-        onRemoved:onRemoved<BucketValue<T>>;
+        onRemoved:onRemoved<WindowBucket<T>>;
 
         constructor(
             options : WindowCoreOptions<T>
@@ -57,9 +59,9 @@ export declare module RollingTimeWindow{
     export class WindowSingleStackedCounter extends WindowSingleCounter{
 
     }
-    export class TimePoint {
+    export class TimePoint<T> {
         at:number;
-        value:number;
+        value:T;
     }
     export class TimeBasedWindowCounter extends WindowSingleCounter{
         toDateArray():WindowBucket<number>[]
@@ -88,3 +90,4 @@ export declare module RollingTimeWindow{
         getFromLast<T>(key:string ):number;
     }
 }
+export = RollingTimeWindow;
