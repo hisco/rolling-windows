@@ -1,5 +1,7 @@
 # Rolling time window store
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/hisco/rolling-windows.svg)](https://greenkeeper.io/)
+
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
