@@ -1,7 +1,6 @@
 # Rolling time window store
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/hisco/rolling-windows.svg)](https://greenkeeper.io/)
-
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Test Coverage][coveralls-image]][coveralls-url]
@@ -62,8 +61,8 @@ No worries you can just use a 'Rolling window'!
 
 ### Using TypeScript
 ```ts
-    import {rollingTimeWindow} from 'rolling-time-window';
-    //Now you can use `rollingTimeWindow.TimeBasedWindowCounter` etc...
+    import {TimeBasedWindowCounter , GenericTimeBasedStore} from 'rolling-time-window';
+
 ```
 
 ## Why not just array?
