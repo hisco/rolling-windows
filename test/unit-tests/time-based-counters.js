@@ -16,7 +16,7 @@ describe('TimeBasedWindowMultipleCounters' , ()=>{
         createContainerSpy = chai.spy(()=>9);
         timeWindowMultipleCountersOptions = {
             timeWindow : 5000,
-            bucketsFrequancy : 3,
+            bucketsFrequency : 3,
             defaultValueFactory : ()=>{},
             onRemoved : ()=>4
         }

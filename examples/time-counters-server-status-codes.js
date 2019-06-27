@@ -2,7 +2,7 @@ const {TimeBasedWindowMultipleCounters} = require('../src/time-based-counters');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
     timeWindow : 1000*20, //I want to have information up to 20 seconds
-    bucketsFrequancy : 1000*2,//I want to have bucket per 2 seconds
+    bucketsFrequency : 1000*2,//I want to have bucket per 2 seconds
 });
 rollingTimeCounters.start();
 

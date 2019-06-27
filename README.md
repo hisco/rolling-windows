@@ -133,7 +133,7 @@ If you are not famillier with TypeScript you can go a head and jump to the examp
     }
     interface TimeWindowCoreOptions<T>{
         timeWindow : number,
-        bucketsFrequancy : number,
+        bucketsFrequency : number,
         defaultValueFactory : defaultValueFactory<T>,
         onRemoved : onRemoved<BucketValue<T>>;
     }
@@ -222,7 +222,7 @@ const {TimeBasedWindowMultipleCounters} = require('rolling-windows');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
     timeWindow : 1000*60, //I want to have information up to 1 minute
-    bucketsFrequancy : 1000*10,//I want to have bucket every 10 seconds
+    bucketsFrequency : 1000*10,//I want to have bucket every 10 seconds
 });
 //Start the internal
 rollingTimeCounters.start();
@@ -243,7 +243,7 @@ const {WindowSingleCounter} = require('rolling-windows');
 
 const counter = new WindowSingleCounter({
     timeWindow : 1000*60*60, //I want to have information up tp an hour
-    bucketsFrequancy : 1000*20,//I want to have bucket per 20 seconds
+    bucketsFrequency : 1000*20,//I want to have bucket per 20 seconds
 });
 //increase
 counter.increase();
@@ -267,7 +267,7 @@ const {TimeBasedWindowMultipleCounters} = require('rolling-windows');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
     timeWindow : 1000*20, //I want to have information up to 20 seconds
-    bucketsFrequancy : 1000*2,//I want to have bucket per 2 seconds
+    bucketsFrequency : 1000*2,//I want to have bucket per 2 seconds
 });
 rollingTimeCounters.start();
 
@@ -328,7 +328,7 @@ const querystring = require('querystring');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
     timeWindow : 1000*60*60, //I want to have information up to 1 hour
-    bucketsFrequancy : 1000*2,//I want to have bucket every 1 minute
+    bucketsFrequency : 1000*2,//I want to have bucket every 1 minute
 });
 //Start the internal interval
 rollingTimeCounters.start();

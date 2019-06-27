@@ -20,7 +20,7 @@ describe('WindowMultipleCounters' , ()=>{
         ));
         windowMultipleCountersOptions = {
             timeWindow : 5000,
-            bucketsFrequancy : 3,
+            bucketsFrequency : 3,
             defaultValueFactory : ()=>1,
             onRemoved : ()=>4
         }

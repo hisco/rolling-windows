@@ -155,20 +155,20 @@ class TimeWindowCore{
     }
     constructor({
         timeWindow,
-        bucketsFrequancy,
+        bucketsFrequency,
         defaultValueFactory,
         onRemoved
     }){
     
        this._createContainer(
-           parseInt(timeWindow/bucketsFrequancy),
+           parseInt(timeWindow/bucketsFrequency),
            onRemoved,
            defaultValueFactory
         );
-        this.bucketsFrequancy = bucketsFrequancy;
+        this.bucketsFrequency = bucketsFrequency;
     }
     _getTimeToNextTick(){
-        return (this.lastTick + this.bucketsFrequancy) - Date.now();
+        return (this.lastTick + this.bucketsFrequency) - Date.now();
     }
     _onIntervalTick(){
         this.lastTick = Date.now();
@@ -176,7 +176,7 @@ class TimeWindowCore{
     }
     _startInterval(){
         this._stopInterval();
-        this._interval = this._setInterval(this._onIntervalTick.bind(this), this.bucketsFrequancy);
+        this._interval = this._setInterval(this._onIntervalTick.bind(this), this.bucketsFrequency);
     }
     get _setInterval(){
         return setInterval;
