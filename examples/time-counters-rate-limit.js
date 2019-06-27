@@ -4,7 +4,7 @@ const querystring = require('querystring');
 
 const rollingTimeCounters = new TimeBasedWindowMultipleCounters({
     timeWindow : 1000*60*60, //I want to have information up to 1 hour
-    bucketsFrequancy : 1000*2,//I want to have bucket every 1 minute
+    bucketsFrequency : 1000*2,//I want to have bucket every 1 minute
 });
 //Start the internal interval
 rollingTimeCounters.start();

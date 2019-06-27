@@ -37,7 +37,7 @@ describe('WindowSingleCounter' , ()=>{
         lastWidnowValueSetterSpy = chai.spy(()=>9);
         windowSingleConterOptions = {
             timeWindow : 5000,
-            bucketsFrequancy : 3,
+            bucketsFrequency : 3,
             defaultValueFactory : ()=>1,
             onRemoved : ()=>4
         }
@@ -146,7 +146,7 @@ describe('WindowSingleCounter' , ()=>{
             lastWidnowValueSetterSpy = chai.spy(()=>9);
             windowSingleConterOptions = {
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             }

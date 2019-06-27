@@ -9,7 +9,7 @@ declare module RollingTimeWindow{
     }
     export interface TimeWindowCoreOptions<T>{
         timeWindow : number,
-        bucketsFrequancy : number,
+        bucketsFrequency : number,
         defaultValueFactory : defaultValueFactory<T>,
         onRemoved : onRemoved<WindowBucket<T>>;
     }

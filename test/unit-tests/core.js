@@ -826,12 +826,12 @@ describe('TimeWindowCore' , ()=>{
         beforeEach(()=>{
             timeWindowOptions = {
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             }
         });
-        it('Should call _createContainer with correct timeWindow/bucketsFrequancy',()=>{
+        it('Should call _createContainer with correct timeWindow/bucketsFrequency',()=>{
             const spy = chai.spy(()=>5);
             class DummyTimeWindowCore extends TimeWindowCore{
                 get _createContainer(){
@@ -839,7 +839,7 @@ describe('TimeWindowCore' , ()=>{
                 }
             };
             timeWindowOptions.timeWindow = 11;
-            timeWindowOptions.bucketsFrequancy = 2;
+            timeWindowOptions.bucketsFrequency = 2;
             timeWindowOptions.onRemoved = "something";
             timeWindowOptions.defaultValueFactory = "something1";
 
@@ -851,7 +851,7 @@ describe('TimeWindowCore' , ()=>{
                 timeWindowOptions.defaultValueFactory
             );
         });
-        it('Should set bucketsFrequancy' , ()=>{
+        it('Should set bucketsFrequency' , ()=>{
             const spy = chai.spy(()=>5);
             class DummyTimeWindowCore extends TimeWindowCore{
                 get _createContainer(){
@@ -860,7 +860,7 @@ describe('TimeWindowCore' , ()=>{
             };
             timeWindowCore = new DummyTimeWindowCore(timeWindowOptions);
 
-            expect(timeWindowCore.bucketsFrequancy).to.equal(timeWindowOptions.bucketsFrequancy)
+            expect(timeWindowCore.bucketsFrequency).to.equal(timeWindowOptions.bucketsFrequency)
         })
     });
     describe('#_getTimeToNextTick' , ()=>{
@@ -874,7 +874,7 @@ describe('TimeWindowCore' , ()=>{
         it('Should calculate time to next tick' , ()=>{
             const result = TimeWindowCore.prototype._getTimeToNextTick.call({
                 lastTick : 10,
-                bucketsFrequancy : 10
+                bucketsFrequency : 10
             });
             expect(result).to.be.equal(11);
         });
@@ -885,7 +885,7 @@ describe('TimeWindowCore' , ()=>{
         beforeEach(()=>{
             timeWindowOptions = {
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             }
@@ -928,7 +928,7 @@ describe('TimeWindowCore' , ()=>{
         beforeEach(()=>{
             timeWindowOptions = {
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             }
@@ -971,7 +971,7 @@ describe('TimeWindowCore' , ()=>{
             timeWindowCore = new DummyTimeWindowCore(timeWindowOptions);
             timeWindowCore._startInterval();
 
-            expect(spyInterval).to.have.been.called.with(spyOnIntervalTick , timeWindowOptions.bucketsFrequancy);
+            expect(spyInterval).to.have.been.called.with(spyOnIntervalTick , timeWindowOptions.bucketsFrequency);
         
         });
     });
@@ -981,7 +981,7 @@ describe('TimeWindowCore' , ()=>{
         beforeEach(()=>{
             timeWindowOptions = {
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             }
@@ -1035,7 +1035,7 @@ describe('TimeWindowCore' , ()=>{
         beforeEach(()=>{
             timeWindowCore = new TimeWindowCore({
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             });
@@ -1053,7 +1053,7 @@ describe('TimeWindowCore' , ()=>{
         beforeEach(()=>{
             timeWindowCore = new TimeWindowCore({
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             });
@@ -1078,7 +1078,7 @@ describe('TimeWindowCore' , ()=>{
             _createContainerSpy = chai.spy(()=>3);
             timeWindowOptions = {
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             }
@@ -1150,7 +1150,7 @@ describe('TimeWindowCore' , ()=>{
             pauseBindSpy = chai.spy(()=>4);
             timeWindowOptions = {
                 timeWindow : 5000,
-                bucketsFrequancy : 3,
+                bucketsFrequency : 3,
                 defaultValueFactory : ()=>1,
                 onRemoved : ()=>4
             }

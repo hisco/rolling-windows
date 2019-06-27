@@ -2,7 +2,7 @@ const {WindowSingleCounter} = require('../src/single-counter');
 
 const counter = new WindowSingleCounter({
     timeWindow : 1000*60*60, //I want to have information up tp an hour
-    bucketsFrequancy : 1000*20,//I want to have bucket per 20 seconds
+    bucketsFrequency : 1000*20,//I want to have bucket per 20 seconds
 });
 //increase
 counter.increase();
